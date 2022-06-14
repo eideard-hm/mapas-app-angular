@@ -23,7 +23,6 @@ export class PlacesInterceptor implements HttpInterceptor {
 
     const cloneRequest = request.clone({
       params: request.params.appendAll({
-        limit: 5,
         language: 'es',
         access_token: environment.accessToken
       })

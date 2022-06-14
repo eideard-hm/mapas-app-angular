@@ -1,9 +1,8 @@
 <div class="search-container">
   <input type="text"
          class="form-control"
-         [placeholder]="placeholder"
-         #inputValue
-         (input)="onInputChanged(inputValue.value)">
+         [formControl]="inputSearch"
+         [placeholder]="placeholder">
 
   <app-search-result [places]="places"></app-search-result>
 </div>

@@ -1,9 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
-import { debounceTime, distinctUntilChanged, map, filter, Subject, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, filter, switchMap } from 'rxjs';
 
 import { PlacesService } from '@maps/services';
 import { Feature } from '@maps/interfaces/maps.interface';
+import { MapService } from '@shared/services';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-search-bar',
@@ -12,19 +15,23 @@ import { Feature } from '@maps/interfaces/maps.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchBarComponent implements OnInit {
+
   @Input() placeholder: string = 'Search...';
 
-  places: Feature[] = []
-  debounce: Subject<string> = new Subject<string>();
+  places: Feature[] = [];
+  inputSearch: FormControl = new FormControl('');
 
-  constructor(private readonly _placesSvc: PlacesService) { }
+  constructor(
+    private readonly _placesSvc: PlacesService,
+    private readonly _mapSvc: MapService
+  ) { }
 
   ngOnInit(): void {
     this.getPlacesBySearchTerm()
   }
 
   getPlacesBySearchTerm() {
-    this.debounce
+    this.inputSearch.valueChanges
       .pipe(
         debounceTime(300),
         map(term => term.trim()),
@@ -33,11 +40,15 @@ export class SearchBarComponent implements OnInit {
 
         switchMap((term: string) => this._placesSvc.getPlaceBySearchTerm(term)),
       )
-      .subscribe((places: Feature[]) => this.places = places)
+      .subscribe({
+        next: (places: Feature[]) => {
+          this.places = places;
+          this._mapSvc.createMarkersFromPlaces(places)
+        },
+        error: (e: HttpErrorResponse) => {
+          console.error('Ocurrió un error al buscar los lugares', e.message);
+          throw new Error("Error al buscar los lugares")
+        }
+      })
   }
-
-  onInputChanged(term: string) {
-    this.debounce.next(term)
-  }
-
 }
