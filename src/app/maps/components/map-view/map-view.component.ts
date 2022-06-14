@@ -2,7 +2,7 @@ import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core'
 
 import { Map, Marker, Popup } from 'mapbox-gl'
 
-import { GeolocationService } from '@shared/services/geolocation.service'
+import { GeolocationService, MapService } from '@shared/services'
 
 @Component({
   selector: 'app-map-view',
@@ -12,7 +12,10 @@ import { GeolocationService } from '@shared/services/geolocation.service'
 export class MapViewComponent implements AfterViewInit {
   @ViewChild('mapDiv') mapDivElement!: ElementRef
 
-  constructor (private readonly _geolocationSvc: GeolocationService) {}
+  constructor (
+    private readonly _geolocationSvc: GeolocationService,
+    private readonly _mapSvc: MapService
+    ) {}
 
   ngAfterViewInit (): void {
     this.initMapboxConfi()
@@ -45,5 +48,7 @@ export class MapViewComponent implements AfterViewInit {
       .setLngLat(this._geolocationSvc.userLocation)
       .setPopup(popup)
       .addTo(map)
+
+      this._mapSvc.setMap(map)
   }
 }

@@ -1,5 +1,11 @@
-<app-map-view *ngIf="isUserLocationReady; else showLoading"></app-map-view>
+<app-loading *ngIf="!isUserLocationReady; else showLoading"></app-loading>
 
 <ng-template #showLoading>
-  <app-loading></app-loading>
+  <app-map-view></app-map-view>
+
+  <app-search-bar placeholder="Search some place...">
+  </app-search-bar>
+  <app-btn-my-location></app-btn-my-location>
 </ng-template>
+
+<app-logo></app-logo>

@@ -1,0 +1,10 @@
+<div class="search-container">
+  <input type="text"
+         class="form-control"
+         [placeholder]="placeholder"
+         #inputValue
+         (input)="onInputChanged(inputValue.value)">
+
+  <app-search-result [places]="places"></app-search-result>
+</div>
+

@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  accessToken: 'pk.eyJ1IjoiZWlkZWFyZC1obSIsImEiOiJjbDRjdjg2aHIwMmM1M2pvYmtjaHY4enY0In0.y54qcZ-L5m-5ZudG-_yJ5g',
+  maxboxApiUrl: `https://api.mapbox.com/geocoding/v5/mapbox.places`
 };
 
 /*
