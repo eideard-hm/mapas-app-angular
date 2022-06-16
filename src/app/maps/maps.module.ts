@@ -9,6 +9,7 @@ import { BtnMyLocationComponent } from './components/btn-my-location/btn-my-loca
 import { LogoComponent } from './components/logo/logo.component';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { SearchResultComponent } from './components/search-result/search-result.component';
+import { DetailRouteComponent } from './components/detail-route/detail-route.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { SearchResultComponent } from './components/search-result/search-result.
     BtnMyLocationComponent,
     LogoComponent,
     SearchBarComponent,
-    SearchResultComponent
+    SearchResultComponent,
+    DetailRouteComponent
   ],
   imports: [
     CommonModule,

@@ -1,9 +1,16 @@
-<div class="search-container">
-  <input type="text"
-         class="form-control"
-         [formControl]="inputSearch"
-         [placeholder]="placeholder">
+<ng-container *ngIf="isShowingSearchResult$ | async; else showTour">
+  <div class="search-container">
+    <input type="text"
+           class="form-control"
+           [formControl]="inputSearch"
+           [placeholder]="placeholder">
 
-  <app-search-result [places]="places"></app-search-result>
-</div>
+    <app-search-result [places]="places"></app-search-result>
+  </div>
+</ng-container>
 
+<ng-template #showTour>
+  <div class="search-container">
+    <app-detail-route></app-detail-route>
+  </div>
+</ng-template>

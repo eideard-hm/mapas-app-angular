@@ -3,9 +3,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
 import { AnyLayer, AnySourceData, LngLatBounds, LngLatLike, Map, Marker, Popup } from 'mapbox-gl'
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 
-import { Feature } from '@maps/interfaces/maps.interface'
+import { Feature } from '@maps/interfaces/maps.interface';
 import { GeolocationService } from './geolocation.service';
 import { DirectionsResponse, Route } from '@maps/interfaces/directions.interface';
 
@@ -17,6 +17,8 @@ export class MapService {
   private apiUrl: string = environment.maxboxApiDirectionsUrl;
   private map!: Map
   private markers: Marker[] = []
+
+  isShowingSearchResult$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true)
 
   constructor(
     private readonly _http: HttpClient,
@@ -93,21 +95,23 @@ export class MapService {
 
     if (!this.map) throw new Error("El mapa no ha sido inicializado!");
 
-    const coords = route.geometry.coordinates[0];
-    // const bound = new LngLatBounds();
-    // coords.forEach(([lng, lat]: any) => bound.extend([lng, lat]))
+    const coords = route.geometry.coordinates;
+    const bound = new LngLatBounds();
+    coords.forEach(([lng, lat]) => bound.extend([lng, lat]))
 
-    // this.map?.fitBounds(bound, {
-    //   padding: 100
-    // })
+    this.map?.fitBounds(bound, {
+      padding: 100
+    })
 
+    this.isShowingSearchResult$.next(false);
     // draw Polyline
     this.drawLineString(coords)
   }
 
-  drawLineString(coords: any) {
+  private drawLineString(coords: number[][]) {
+    console.log({ coords })
 
-    if(this.map.getLayer('lineStringLayout')) {
+    if (this.map.getLayer('lineStringLayout')) {
       this.map.removeLayer('lineStringLayout');
       this.map.removeSource('lineStringSource');
     }
@@ -138,13 +142,13 @@ export class MapService {
         'line-join': 'round'
       },
       paint: {
-        'line-color': 'black',
-        'line-width': 5
+        'line-color': 'green',
+        'line-width': 5,
+        'line-opacity': 0.75
       }
     };
 
     this.map.addSource('lineStringSource', sourceData);
-
     this.map.addLayer(layerOptions);
   }
 }

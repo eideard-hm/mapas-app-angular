@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
-import { debounceTime, distinctUntilChanged, map, filter, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, filter, switchMap, Observable } from 'rxjs';
 
 import { PlacesService } from '@maps/services';
 import { Feature } from '@maps/interfaces/maps.interface';
@@ -17,9 +17,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class SearchBarComponent implements OnInit {
 
   @Input() placeholder: string = 'Search...';
-
   places: Feature[] = [];
   inputSearch: FormControl = new FormControl('');
+  isShowingSearchResult$!: Observable<boolean>;
 
   constructor(
     private readonly _placesSvc: PlacesService,
@@ -27,7 +27,8 @@ export class SearchBarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getPlacesBySearchTerm()
+    this.isShowingSearchResult$ = this._mapSvc.isShowingSearchResult$;
+    this.getPlacesBySearchTerm();
   }
 
   getPlacesBySearchTerm() {
